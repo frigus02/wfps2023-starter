@@ -6,7 +6,22 @@ Extended by your friendly Web Framework Perspective Summit team.
 
 ## Developing
 
-Once you've installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Prerequisites:
+
+- Install dependencies: `npm install`
+
+- Create a GitHub personal access token:
+
+  - Open https://github.com/settings/tokens?type=beta
+  - Create token for your repository only, with scopes "Discussions: read-only".
+
+- Create a `.env` file with the content:
+
+  ```
+  GITHUB_TOKEN=your_personal_access_token
+  ```
+
+Start a development server:
 
 ```bash
 npm run dev
