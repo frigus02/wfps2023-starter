@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense } from "solid-js";
+import {Suspense} from "solid-js";
 import {
   A,
   Body,
@@ -25,8 +25,8 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <A href="/">Index</A>
-            <A href="/about">About</A>
+            <A href="/">Home</A>
+            <A href="/discussions">Discussions</A>
             <Routes>
               <FileRoutes />
             </Routes>
