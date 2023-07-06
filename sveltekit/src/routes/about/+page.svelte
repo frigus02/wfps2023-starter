@@ -16,11 +16,8 @@
 	<p>
 		The page you're looking at is purely static HTML, with no client-side interactivity needed.
 		Because of that, we don't need to load any JavaScript. Try viewing the page's source, or opening
-		the devtools network panel and reloading.
-	</p>
-
-	<p>
-		The <a href="/sverdle">Sverdle</a> page illustrates SvelteKit's data loading and form handling. Try
-		using it with JavaScript disabled!
+		the devtools network panel and reloading. <strong>Note:</strong> in <code>npm run dev</code>
+		mode, this page uses JavaScript to get hot reloading. If you open this page in
+		<code>npm run build && npm run preview</code> it has no JavaScript.
 	</p>
 </div>
