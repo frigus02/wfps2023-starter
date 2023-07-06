@@ -19,6 +19,8 @@ Prerequisites:
 
   ```
   GITHUB_TOKEN=your_personal_access_token
+  GITHUB_REPO_OWNER=angular
+  GITHUB_REPO_NAME=angular
   ```
 
 Start a development server:
