@@ -1,28 +1,28 @@
 <script setup lang="ts">
 defineProps<{
   groups: Array<{
-    content: string
+    content: string;
     reactors: {
-      totalCount: number
-    }
-  }>
+      totalCount: number;
+    };
+  }>;
 }>();
 
-const pickerIsVisible = ref(false)
+const pickerIsVisible = ref(false);
 
 const togglePicker = () => {
-  pickerIsVisible.value = !pickerIsVisible.value
-}
+  pickerIsVisible.value = !pickerIsVisible.value;
+};
 
 const EMOJI_LOOKUP = new Map([
-  ['THUMBS_UP', '👍'],
-  ['THUMBS_DOWN', '👎'],
-  ['LAUGH', '😄'],
-  ['HOORAY', '🎉'],
-  ['CONFUSED', '😕'],
-  ['HEART', '❤️'],
-  ['ROCKET', '🚀'],
-  ['EYES', '👀'],
+  ["THUMBS_UP", "👍"],
+  ["THUMBS_DOWN", "👎"],
+  ["LAUGH", "😄"],
+  ["HOORAY", "🎉"],
+  ["CONFUSED", "😕"],
+  ["HEART", "❤️"],
+  ["ROCKET", "🚀"],
+  ["EYES", "👀"],
 ]);
 </script>
 <template>

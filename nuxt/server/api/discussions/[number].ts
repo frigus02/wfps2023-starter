@@ -20,8 +20,10 @@ export interface DiscussionResponse {
   discussion: Discussion;
 }
 
-export default defineEventHandler(async (event): Promise<DiscussionResponse> => {
-  const data: any = await useGraphql(`
+export default defineEventHandler(
+  async (event): Promise<DiscussionResponse> => {
+    const data: any = await useGraphql(
+      `
     query discussionDetails($repoOwner: String!, $repoName: String!, $number: Int!) {
       repository(owner: $repoOwner, name: $repoName) {
         discussion(number: $number) {
@@ -39,54 +41,59 @@ export default defineEventHandler(async (event): Promise<DiscussionResponse> => 
             }
           }
           bodyHTML
-					comments(first: 10) {
-						edges {
-							node {
-								author {
-									login
-								}
-								createdAt
-								bodyHTML
-							}
-						}
-					}
+          comments(first: 10) {
+            edges {
+              node {
+                author {
+                  login
+                }
+                createdAt
+                bodyHTML
+              }
+            }
+          }
         }
       }
-    }`, {
-      number: Number(event.context.params!['number'])
-    })
+    }`,
+      {
+        number: Number(event.context.params!["number"]),
+      }
+    );
 
-  const {
-    repository: {
+    const {
+      repository: {
+        discussion: {
+          id,
+          number,
+          title,
+          author: { login: author },
+          createdAt,
+          reactionGroups,
+          bodyHTML,
+          comments: { edges: comments },
+        },
+      },
+    } = data;
+
+    console.log(reactionGroups);
+
+    return {
       discussion: {
         id,
         number,
         title,
-        author: {login: author},
+        author,
         createdAt,
         reactionGroups,
         bodyHTML,
-        comments: {edges: comments}
-      }
-    }
-  } = data;
-
-  console.log(reactionGroups);
-
-  return {
-    discussion: {
-      id,
-      number,
-      title,
-      author,
-      createdAt,
-      reactionGroups,
-      bodyHTML,
-      comments: comments.map(({node: {author, createdAt, bodyHTML}}: any) => ({
-        author: author.login,
-        createdAt,
-        bodyHTML
-      }))
-    }
+        comments: comments.map(
+          ({ node: { author, createdAt, bodyHTML } }: any) => ({
+            author: author.login,
+            createdAt,
+            bodyHTML,
+          })
+        ),
+      },
+    };
   }
-})
+);
