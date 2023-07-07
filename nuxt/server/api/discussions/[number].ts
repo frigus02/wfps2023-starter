@@ -75,8 +75,6 @@ export default defineEventHandler(
       },
     } = data;
 
-    console.log(reactionGroups);
-
     return {
       discussion: {
         id,
