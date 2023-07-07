@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { REACTIONS } from '../../../lib/reactions';
+	import { REACTIONS, REACTION_EMOJI } from '../../../lib/reactions';
 
 	let shown = false;
 
-	function addReaction(reaction) {
+	function addReaction(reaction: (typeof REACTIONS)[number]) {
 		console.log('react with', reaction);
 		shown = false;
 	}
@@ -12,8 +12,8 @@
 <div class="add-reaction">
 	<button on:click={() => (shown = !shown)}>Add reaction</button>
 	<dialog open={shown}>
-		{#each Object.keys(REACTIONS) as reaction}
-			<button on:click={() => addReaction(reaction)}>{REACTIONS[reaction]}</button>{' '}
+		{#each REACTIONS as reaction}
+			<button on:click={() => addReaction(reaction)}>{REACTION_EMOJI[reaction]}</button>{' '}
 		{/each}
 	</dialog>
 </div>

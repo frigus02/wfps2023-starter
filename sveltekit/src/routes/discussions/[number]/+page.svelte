@@ -1,28 +1,41 @@
 <script lang="ts">
-	import { REACTIONS } from '../../../lib/reactions';
+	import { REACTION_EMOJI } from '../../../lib/reactions';
 	import AddReaction from './AddReaction.svelte';
 	export let data;
 
-	$: currentReactions = data.reactionGroups.filter((group) => group.totalCount > 0);
+	$: ({ discussion, comments } = data);
+	$: currentReactions = discussion.reactionGroups.filter((group) => group.totalCount > 0);
 </script>
 
 <svelte:head>
-	<title>{data.title} - Discussions</title>
+	<title>{discussion.title} - Discussions</title>
 	<meta name="description" content="WPFS 2023 Discussions" />
 </svelte:head>
 
 <section>
-	<h1>{data.title}</h1>
-	<p>by {data.author} on {data.createdAt}</p>
-	<div>{@html data.bodyHTML}</div>
+	<h1>{discussion.title}</h1>
+	<p>by {discussion.author} on {discussion.createdAt}</p>
+	<div>{@html discussion.bodyHTML}</div>
 	<div class="reactions">
 		{#each currentReactions as group (group.content)}
 			<button disabled>
-				{REACTIONS[group.content] ?? group.content}
+				{REACTION_EMOJI[group.content]}
 				{group.totalCount}
 			</button>{' '}
 		{/each}
 		<AddReaction />
+	</div>
+	<div class="comments">
+		<h2>Comments</h2>
+		<ul>
+			{#each comments as comment}
+				<li>
+					{comment.author}
+					{comment.createdAt}
+					{@html comment.bodyHTML}
+				</li>
+			{/each}
+		</ul>
 	</div>
 </section>
 

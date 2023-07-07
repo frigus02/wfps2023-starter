@@ -1,5 +1,6 @@
-import { goto } from '$app/navigation';
 import { env } from '$env/dynamic/private';
+
+import type { REACTIONS } from '../reactions';
 
 function requireEnv(key: string): string {
 	const value = env[key];
@@ -31,7 +32,7 @@ export interface Discussion {
 }
 
 export interface ReactionGroup {
-	content: string;
+	content: (typeof REACTIONS)[number];
 	totalCount: number;
 }
 
@@ -90,16 +91,50 @@ export async function getDiscussionDetails(number: number): Promise<DiscussionDe
 			}
 		}
 	`);
-	const item = (body as any).data.repository.discussion;
+	const discussion = (body as any).data.repository.discussion;
 	return {
-		number: item.number,
-		title: item.title,
-		author: item.author.login,
-		createdAt: item.createdAt,
-		reactionGroups: item.reactionGroups.map((group: any) => ({
+		number: discussion.number,
+		title: discussion.title,
+		author: discussion.author.login,
+		createdAt: discussion.createdAt,
+		reactionGroups: discussion.reactionGroups.map((group: any) => ({
 			content: group.content,
 			totalCount: group.reactors.totalCount
 		})),
-		bodyHTML: item.bodyHTML
+		bodyHTML: discussion.bodyHTML
 	};
+}
+
+export interface DiscussionComment {
+	author: string;
+	createdAt: string;
+	bodyHTML: string;
+}
+
+export async function getDiscussionComments(number: number): Promise<DiscussionComment[]> {
+	const body = await queryGraphQl(`
+		{
+			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
+				discussion(number: ${number}) {
+					comments(last: 10) {
+						edges {
+							node {
+								author {
+									login
+								}
+								createdAt
+								bodyHTML
+							}
+						}
+					}
+				}
+			}
+		}
+	`);
+	const comments = (body as any).data.repository.discussion.comments.edges;
+	return comments.map((comment: any) => ({
+		author: comment.node.author.login,
+		createdAt: comment.node.createdAt,
+		bodyHTML: comment.node.bodyHTML
+	}));
 }
