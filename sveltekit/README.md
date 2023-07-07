@@ -15,13 +15,13 @@ Prerequisites:
 
   - Open https://github.com/settings/apps/new
   - Enter the following settings:
-    * Github App name: Your choice but inlude "(local dev)" for clarity.
-    * Homepage URL: http://localhost:3000
-    * Callback URL: http://localhost:3000/oauth/callback
-    * Uncheck "Active" under "Webhook".
-    * Under "Permissions", expand "Repository permissions". Check "Read-only"
+    - Github App name: Your choice but inlude "(local dev)" for clarity.
+    - Homepage URL: http://localhost:3000
+    - Callback URL: http://localhost:3000/oauth/callback
+    - Uncheck "Active" under "Webhook".
+    - Under "Permissions", expand "Repository permissions". Check "Read-only"
       for "Discussions".
-    * For the other options, leaving the defaults should be enough.
+    - For the other options, leaving the defaults should be enough.
   - Once the app is installed, use "Install App" to add it to your team's repo.
     You'll find a numeric "installation id" in the URL.
   - Share the app id and the client id with your team members.
@@ -39,6 +39,7 @@ Prerequisites:
   GITHUB_INSTALLATION_ID="Installation id for this repo"
   GITHUB_CLIENT_SECRET="Client secret"
   ```
+
 - Copy the private key to `.env.private-key.pem`.
 
 The repo owner needs to create the application but can generate keys and secrets
