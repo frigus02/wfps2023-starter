@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { REACTIONS } from '../../../lib/reactions';
+	import AddReaction from './AddReaction.svelte';
 	export let data;
+
+	$: currentReactions = data.reactionGroups.filter((group) => group.totalCount > 0);
 </script>
 
 <svelte:head>
@@ -10,7 +14,16 @@
 <section>
 	<h1>{data.title}</h1>
 	<p>by {data.author} on {data.createdAt}</p>
-	<p>{@html data.bodyHTML}</p>
+	<div>{@html data.bodyHTML}</div>
+	<div class="reactions">
+		{#each currentReactions as group (group.content)}
+			<button disabled>
+				{REACTIONS[group.content] ?? group.content}
+				{group.totalCount}
+			</button>{' '}
+		{/each}
+		<AddReaction />
+	</div>
 </section>
 
 <style>

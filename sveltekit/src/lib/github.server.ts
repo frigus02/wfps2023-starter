@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 import { env } from '$env/dynamic/private';
 
 function requireEnv(key: string): string {
@@ -29,7 +30,13 @@ export interface Discussion {
 	createdAt: string;
 }
 
+export interface ReactionGroup {
+	content: string;
+	totalCount: number;
+}
+
 export interface DiscussionDetails extends Discussion {
+	reactionGroups: ReactionGroup[];
 	bodyHTML: string;
 }
 
@@ -72,6 +79,12 @@ export async function getDiscussionDetails(number: number): Promise<DiscussionDe
 						login
 					}
 					createdAt
+					reactionGroups {
+						content
+						reactors {
+							totalCount
+						}
+					}
 					bodyHTML
 				}
 			}
@@ -83,6 +96,10 @@ export async function getDiscussionDetails(number: number): Promise<DiscussionDe
 		title: item.title,
 		author: item.author.login,
 		createdAt: item.createdAt,
+		reactionGroups: item.reactionGroups.map((group: any) => ({
+			content: group.content,
+			totalCount: group.reactors.totalCount
+		})),
 		bodyHTML: item.bodyHTML
 	};
 }
