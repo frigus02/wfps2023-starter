@@ -1,4 +1,4 @@
-import { type DiscussionDetails, getDiscussionDetails } from '../../../lib/github.server';
+import { type DiscussionDetails, getDiscussionDetails } from '../../../lib/server/github';
 
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';

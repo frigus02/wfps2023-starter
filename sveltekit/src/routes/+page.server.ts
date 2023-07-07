@@ -1,4 +1,4 @@
-import { type Discussion, getDiscussionList } from '../lib/github.server';
+import { type Discussion, getDiscussionList } from '../lib/server/github';
 
 import type { PageServerLoad } from './$types';
 
