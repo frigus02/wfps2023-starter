@@ -16,8 +16,8 @@ Prerequisites:
   - Open https://github.com/settings/apps/new
   - Enter the following settings:
     - Github App name: Your choice but inlude "(local dev)" for clarity.
-    - Homepage URL: http://localhost:3000
-    - Callback URL: http://localhost:3000/oauth/callback
+    - Homepage URL: http://localhost:5173
+    - Callback URL: http://localhost:5173/oauth/callback
     - Uncheck "Active" under "Webhook".
     - Under "Permissions", expand "Repository permissions". Check "Read-only"
       for "Discussions".
