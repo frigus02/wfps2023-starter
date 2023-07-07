@@ -20,14 +20,22 @@ const GITHUB_INSTALLATION_ID = Number(requireEnv('GITHUB_INSTALLATION_ID'));
 const GITHUB_REPO_NAME = requireEnv('GITHUB_REPO_NAME');
 const GITHUB_REPO_OWNER = requireEnv('GITHUB_REPO_OWNER');
 
-async function queryGraphQl(query: string): Promise<unknown> {
+interface QueryVariables {
+  [name: string]: unknown;
+}
+
+async function queryGraphQl(query: string, variables?: QueryVariables): Promise<unknown> {
   const app = new App({
     appId: GITHUB_APP_ID,
     privateKey: GITHUB_KEY,
     oauth: {clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET},
   });
   const octokit = await app.getInstallationOctokit(GITHUB_INSTALLATION_ID);
-  return await octokit.graphql(query);
+
+  return await octokit.graphql(query, Object.assign({
+    repoOwner: GITHUB_REPO_OWNER,
+    repoName: GITHUB_REPO_NAME,
+  }, variables));
 }
 
 export interface Discussion {
@@ -49,8 +57,8 @@ export interface DiscussionDetails extends Discussion {
 
 export async function getDiscussionList(): Promise<Discussion[]> {
   const body = await queryGraphQl(`
-		{
-			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
+		query discussionList($repoOwner: String!, $repoName: String!) {
+			repository(owner: $repoOwner, name: $repoName) {
 				discussions(last: 10) {
 					edges {
 						node {
@@ -77,26 +85,26 @@ export async function getDiscussionList(): Promise<Discussion[]> {
 
 export async function getDiscussionDetails(number: number): Promise<DiscussionDetails> {
   const body = await queryGraphQl(`
-		{
-			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
-				discussion(number: ${number}) {
-					number
-					title
-					author {
-						login
-					}
-					createdAt
-					reactionGroups {
-						content
-						reactors {
-							totalCount
-						}
-					}
-					bodyHTML
-				}
-			}
+    query discussionDetails($repoOwner: String!, $repoName: String!, $number: Int!) {
+      repository(owner: $repoOwner, name: $repoName) {
+        discussion(number: $number) {
+          number
+          title
+          author {
+            login
+          }
+          createdAt
+          reactionGroups {
+            content
+            reactors {
+              totalCount
+            }
+          }
+          bodyHTML
+        }
+      }
 		}
-	`);
+	`, {number});
   const discussion = (body as any).repository.discussion;
   return {
     number: discussion.number,
@@ -119,9 +127,9 @@ export interface DiscussionComment {
 
 export async function getDiscussionComments(number: number): Promise<DiscussionComment[]> {
   const body = await queryGraphQl(`
-		{
-			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
-				discussion(number: ${number}) {
+		query discussionComments($repoOwner: String!, $repoName: String!, $number: Int!) {
+			repository(owner: $repoOwner, name: $repoName) {
+				discussion(number: $number) {
 					comments(last: 10) {
 						edges {
 							node {
@@ -136,7 +144,7 @@ export async function getDiscussionComments(number: number): Promise<DiscussionC
 				}
 			}
 		}
-	`);
+	`, {number});
   const comments = (body as any).repository.discussion.comments.edges;
   return comments.map((comment: any) => ({
     author: comment.node.author.login,
