@@ -1,4 +1,4 @@
-import {getDiscussionDetail} from "@/server-utils/get-discussion-detail";
+import {getDiscussionDetail} from "@/app/server-utils/get-discussion-detail";
 import {NextResponse} from "next/server";
 
 export async function GET(

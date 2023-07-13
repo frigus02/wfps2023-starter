@@ -5,9 +5,9 @@
  */
 
 import React, {useState} from 'react'
-import {Discussion} from '../../server-utils/get-discussions-list'
+import {Discussion} from '../server-utils/get-discussions-list'
 import useSWR from 'swr'
-import type {DiscussionDetail} from '@/server-utils/get-discussion-detail';
+import type {DiscussionDetail} from '@/app/server-utils/get-discussion-detail';
 
 const fetcher = (url:string) => fetch(url).then(r => r.json());
 
