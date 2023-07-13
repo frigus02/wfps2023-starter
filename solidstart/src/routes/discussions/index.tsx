@@ -1,10 +1,10 @@
 import {For} from "solid-js";
 import {A, Title, useRouteData} from "solid-start";
 import {createServerData$} from "solid-start/server";
-import {loadDiscussionsList} from "~/lib/github/discussions";
+import {getDiscussionList} from "~/lib/github/discussions";
 
 export function routeData() {
-  return createServerData$(() => loadDiscussionsList());
+  return createServerData$(() => getDiscussionList());
 }
 
 export default function Discussions() {
@@ -15,7 +15,7 @@ export default function Discussions() {
       <h1>Discussions</h1>
       <ul>
       <For each={discussions()}>
-        {(d) => <li><A href={"/discussions/" + d.id}>{d.title}</A> by {d.by}, created: {d.time}</li>}
+        {(d) => <li><A href={"/discussions/" + d.number}>{d.title}</A> by {d.author}, created: {d.createdAt}</li>}
       </For>
       </ul>
     </main>
