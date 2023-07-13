@@ -47,10 +47,6 @@ function requireEnv(key: string): string {
 	return value;
 }
 
-// const GITHUB_APP_ID = requireEnv('GITHUB_APP_ID');
-// const GITHUB_CLIENT_ID = requireEnv('GITHUB_CLIENT_ID');
-// const GITHUB_CLIENT_SECRET = requireEnv('GITHUB_CLIENT_SECRET');
-// const GITHUB_INSTALLATION_ID = Number(requireEnv('GITHUB_INSTALLATION_ID'));
 const GITHUB_REPO_OWNER = "angular"; // requireEnv('GITHUB_REPO_OWNER');
 const GITHUB_REPO_NAME = "angular"; // requireEnv('GITHUB_REPO_NAME');
 
@@ -67,7 +63,8 @@ async function queryGraphQl(query: string): Promise<unknown> {
 		},
 		body: JSON.stringify({ query })
 	});
-	return await res.json();
+	const jsonResponse =  await res.json();
+	return jsonResponse;
 }
 
 export async function getDiscussionList(): Promise<Discussion[]> {
@@ -89,12 +86,88 @@ export async function getDiscussionList(): Promise<Discussion[]> {
 			}
 		}
 	`);
+
 	const discussions = (body as any).data.repository.discussions.edges.map((edge: any) => ({
-		id: edge.node.number,
+		number: edge.node.number,
 		title: edge.node.title,
 		by: edge.node.author.login,
 		time: edge.node.createdAt
 	}));
 
   return discussions;
+}
+
+export async function getDiscussionDetails(number: number): Promise<DiscussionDetails> {
+	const body = await queryGraphQl(
+		`
+		{
+			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
+				discussion(number: 49683) {
+					number
+					title
+					author {
+					  login
+					}
+					createdAt
+					reactionGroups {
+					  content
+					  reactors {
+						totalCount
+					  }
+					}
+					bodyHTML
+				}
+			}
+		}
+	`);
+
+	const discussion = (body as any).data.repository.discussion;
+	return {
+		number: discussion.number,
+		title: discussion.title,
+		author: discussion.author.login,
+		createdAt: discussion.createdAt,
+		reactionGroups: discussion.reactionGroups.map((group: any) => ({
+			content: group.content,
+			totalCount: group.reactors.totalCount
+		})),
+		bodyHTML: discussion.bodyHTML
+	};
+}
+
+export interface DiscussionComment {
+	author: string;
+	createdAt: string;
+	bodyHTML: string;
+}
+
+export async function getDiscussionComments(number: number): Promise<DiscussionComment[]> {
+	const body = await queryGraphQl(
+		`
+		{
+			repository(owner: "${GITHUB_REPO_OWNER}", name: "${GITHUB_REPO_NAME}") {
+				discussion(number: 49683) {
+					comments(last: 10) {
+						edges {
+							node {
+								author {
+									login
+								}
+								createdAt
+								bodyHTML
+							}
+						}
+					}
+				}
+			}
+		}
+	`,
+	);
+
+	const comments = (body as any).data.repository.discussion.comments.edges;
+	return comments.map((comment: any) => ({
+		author: comment.node.author.login,
+		createdAt: comment.node.createdAt,
+		bodyHTML: comment.node.bodyHTML
+	}));
 }
