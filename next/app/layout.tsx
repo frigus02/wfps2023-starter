@@ -11,8 +11,11 @@ export const metadata: Metadata = {
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({children}) => {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en">      
+      <body className={inter.className}>
+        <p>[from global layout]</p>
+        {children}
+      </body>
     </html>
   )
 }
