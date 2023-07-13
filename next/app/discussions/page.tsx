@@ -1,6 +1,6 @@
 import React from 'react'
 import {getDiscussionsList} from '../../server-utils/get-discussions-list';
-import { DiscussionList } from './list';
+import {DiscussionList} from './list';
 
 
 const Page: React.FC = async () => {

@@ -7,7 +7,7 @@
 import React, {useState} from 'react'
 import {Discussion} from '../../server-utils/get-discussions-list'
 import useSWR from 'swr'
-import type { DiscussionDetail } from '@/server-utils/get-discussion-detail';
+import type {DiscussionDetail} from '@/server-utils/get-discussion-detail';
 
 const fetcher = (url:string) => fetch(url).then(r => r.json());
 
@@ -25,7 +25,7 @@ const DiscussionItem: React.FC<{discussion: Discussion}> = ({discussion}) => {
       <h2>Title: {discussion.title}</h2>
       <p>By: {discussion.author}</p>
       <p>Created at: {discussion.createdAt}</p>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={showDetailsClicked}>Fetch and show text body below!</button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={showDetailsClicked}>Fetch and show body text below!</button>
       <section>
         {data?.discussion && (<InlineDiscussionDetail discussion={data.discussion}></InlineDiscussionDetail>)}
       </section>
