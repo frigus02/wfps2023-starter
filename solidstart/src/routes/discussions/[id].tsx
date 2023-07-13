@@ -1,6 +1,7 @@
 import {For, createMemo} from "solid-js";
 import {RouteDataArgs, Title, useRouteData} from "solid-start";
 import {createServerData$} from "solid-start/server";
+import {AddReaction} from "~/components/AddReaction";
 import {REACTION_EMOJI, getDiscussionComments, getDiscussionDetails} from "~/lib/github/discussions";
 
 export function routeData({ params }: RouteDataArgs) {
@@ -29,6 +30,7 @@ export default function Discussions() {
           <For each={reactions()}>
             {(group) => <button disabled>{REACTION_EMOJI[group.content]}{group.totalCount}</button>}
           </For>
+          <AddReaction />
         </div>
         <div class="comments">
           <h2>Comments</h2>
