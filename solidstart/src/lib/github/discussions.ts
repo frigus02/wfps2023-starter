@@ -1,3 +1,4 @@
+import {Octokit} from "octokit";
 
 export interface Discussion {
 	number: number;
@@ -41,7 +42,7 @@ export interface DiscussionDetails extends Discussion {
 function requireEnv(key: string): string {
 	const value = process.env[key];
 	if (value == null) {
-		throw new Error(`Missing ${key} env var. Did you create a .env file?`);
+		throw new Error(`Missing ${key} environnement variable.`);
 	}
 
 	return value;
@@ -50,21 +51,18 @@ function requireEnv(key: string): string {
 const GITHUB_REPO_OWNER = "angular"; // requireEnv('GITHUB_REPO_OWNER');
 const GITHUB_REPO_NAME = "angular"; // requireEnv('GITHUB_REPO_NAME');
 
+const GITHUB_TOKEN = requireEnv('GITHUB_TOKEN');
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
-async function queryGraphQl(query: string): Promise<unknown> {
-	const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-	if (!GITHUB_TOKEN) {
-		throw new Error('Missing GITHUB_TOKEN env var. Did you create a .env file?');
-	}
-	const res = await fetch('https://api.github.com/graphql', {
-		method: 'POST',
-		headers: {
-			Authorization: `bearer ${GITHUB_TOKEN}`
-		},
-		body: JSON.stringify({ query })
-	});
-	const jsonResponse =  await res.json();
-	return jsonResponse;
+interface QueryVariables {
+	[name: string]: unknown;
+}
+
+async function queryGraphQl<T>(query: string,  parameters: QueryVariables = {}): Promise<T> {	
+	return  await octokit.graphql(query, Object.assign({
+		repoOwner: GITHUB_REPO_OWNER,
+		repoName: GITHUB_REPO_NAME
+	}, parameters));
 }
 
 export async function getDiscussionList(): Promise<Discussion[]> {
@@ -87,7 +85,7 @@ export async function getDiscussionList(): Promise<Discussion[]> {
 		}
 	`);
 
-	const discussions = (body as any).data.repository.discussions.edges.map((edge: any) => ({
+	const discussions = (body as any).repository.discussions.edges.map((edge: any) => ({
 		number: edge.node.number,
 		title: edge.node.title,
 		by: edge.node.author.login,
@@ -121,7 +119,7 @@ export async function getDiscussionDetails(number: number): Promise<DiscussionDe
 		}
 	`);
 
-	const discussion = (body as any).data.repository.discussion;
+	const discussion = (body as any).repository.discussion;
 	return {
 		number: discussion.number,
 		title: discussion.title,
@@ -164,7 +162,7 @@ export async function getDiscussionComments(number: number): Promise<DiscussionC
 	`,
 	);
 
-	const comments = (body as any).data.repository.discussion.comments.edges;
+	const comments = (body as any).repository.discussion.comments.edges;
 	return comments.map((comment: any) => ({
 		author: comment.node.author.login,
 		createdAt: comment.node.createdAt,
