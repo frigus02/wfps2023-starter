@@ -1,0 +1,1 @@
+Api stuff here, learn more at: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
