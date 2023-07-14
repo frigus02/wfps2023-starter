@@ -1,14 +1,16 @@
-import {component$} from "@builder.io/qwik";
-import type {DocumentHead} from "@builder.io/qwik-city";
+import { component$ } from "@builder.io/qwik";
+import { DocumentHead, Link } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
-    <>Hi!</>
+    <div class="container">
+      <Link href="/discussions">Discussions list</Link>
+    </div>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "Welcome to QwikCity starter kit",
   meta: [
     {
       name: "description",
