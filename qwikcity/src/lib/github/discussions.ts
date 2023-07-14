@@ -48,16 +48,14 @@ function requireEnv(key: string): string {
 	return value;
 }
 
-
-
 interface QueryVariables {
 	[name: string]: unknown;
 }
 
 async function queryGraphQl<T>(query: string,  parameters: QueryVariables = {}): Promise<T> {	
 
-	const GITHUB_REPO_OWNER = "angular"; // requireEnv('GITHUB_REPO_OWNER');
-	const GITHUB_REPO_NAME = "angular"; // requireEnv('GITHUB_REPO_NAME');
+	const GITHUB_REPO_OWNER = "frigus02"; // requireEnv('GITHUB_REPO_OWNER');
+	const GITHUB_REPO_NAME = "wpfs2023-starter"; // requireEnv('GITHUB_REPO_NAME');
 
 	const GITHUB_TOKEN = requireEnv('GITHUB_TOKEN');
 
@@ -91,7 +89,7 @@ export async function getDiscussionList(): Promise<Discussion[]> {
 	const discussions = (body as any).repository.discussions.edges.map((edge: any) => ({
 		number: edge.node.number,
 		title: edge.node.title,
-		by: edge.node.author.login,
+		createdAt: edge.node.author.login,
 		time: edge.node.createdAt
 	}));
 
