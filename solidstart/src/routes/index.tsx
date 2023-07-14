@@ -1,10 +1,10 @@
-import {Title} from "solid-start";
+import { Title } from 'solid-start';
 
 export default function Home() {
-  return (
-    <main>
-      <Title>Home</Title>
-      Welcome!
-    </main>
-  );
+	return (
+		<main>
+			<Title>Home</Title>
+			Welcome!
+		</main>
+	);
 }

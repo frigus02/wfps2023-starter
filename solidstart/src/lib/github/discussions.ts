@@ -1,4 +1,4 @@
-import {Octokit} from "octokit";
+import { Octokit } from 'octokit';
 
 export interface Discussion {
 	number: number;
@@ -48,24 +48,27 @@ function requireEnv(key: string): string {
 	return value;
 }
 
-
-
 interface QueryVariables {
 	[name: string]: unknown;
 }
 
-async function queryGraphQl<T>(query: string,  parameters: QueryVariables = {}): Promise<T> {	
-
-	const GITHUB_REPO_OWNER = "angular"; // requireEnv('GITHUB_REPO_OWNER');
-	const GITHUB_REPO_NAME = "angular"; // requireEnv('GITHUB_REPO_NAME');
+async function queryGraphQl<T>(query: string, parameters: QueryVariables = {}): Promise<T> {
+	const GITHUB_REPO_OWNER = 'angular'; // requireEnv('GITHUB_REPO_OWNER');
+	const GITHUB_REPO_NAME = 'angular'; // requireEnv('GITHUB_REPO_NAME');
 
 	const GITHUB_TOKEN = requireEnv('GITHUB_TOKEN');
 
 	const octokit = new Octokit({ auth: GITHUB_TOKEN });
-	return  await octokit.graphql(query, Object.assign({
-		repoOwner: GITHUB_REPO_OWNER,
-		repoName: GITHUB_REPO_NAME
-	}, parameters));
+	return await octokit.graphql(
+		query,
+		Object.assign(
+			{
+				repoOwner: GITHUB_REPO_OWNER,
+				repoName: GITHUB_REPO_NAME
+			},
+			parameters
+		)
+	);
 }
 
 export async function getDiscussionList(): Promise<Discussion[]> {
@@ -95,7 +98,7 @@ export async function getDiscussionList(): Promise<Discussion[]> {
 		time: edge.node.createdAt
 	}));
 
-  return discussions;
+	return discussions;
 }
 
 export async function getDiscussionDetails(number: number): Promise<DiscussionDetails> {
@@ -120,7 +123,9 @@ export async function getDiscussionDetails(number: number): Promise<DiscussionDe
 				}
 			}
 		}
-	`, {number});
+	`,
+		{ number }
+	);
 
 	const discussion = (body as any).repository.discussion;
 	return {
@@ -162,7 +167,9 @@ export async function getDiscussionComments(number: number): Promise<DiscussionC
 				}
 			}
 		}
-	`, {number});
+	`,
+		{ number }
+	);
 
 	const comments = (body as any).repository.discussion.comments.edges;
 	return comments.map((comment: any) => ({

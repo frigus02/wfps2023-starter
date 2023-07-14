@@ -13,6 +13,7 @@ npm init solid@latest my-app
 ```
 
 ## Creating your github app
+
 Refer to the section "Instruction regarding creating ..." in the root readme file to setup your Github app and .env files in the project folder.
 
 ## Developing
