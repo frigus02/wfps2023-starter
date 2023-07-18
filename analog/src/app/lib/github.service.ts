@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {App} from 'octokit';
 
-import GITHUB_KEY from '../../../.env.private-key-pkcs8.key?raw';
+import GITHUB_KEY from '../../../.env.private-key.pem?raw';
 
 import type {Discussion, DiscussionComment, DiscussionDetails} from './github-interfaces';
 
