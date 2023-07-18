@@ -2,6 +2,10 @@
 
 Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
 
+## Creating your github app
+
+Refer to the section "Instruction regarding creating ..." in the root readme file to setup your Github app and .env files in the project folder.
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
